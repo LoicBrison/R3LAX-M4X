@@ -5,8 +5,8 @@ from keras_preprocessing import image
 import cv2
 import numpy as np
 
-face_classifier=cv2.CascadeClassifier('haarcascade_frontalface_default.xml')
-classifier = load_model('EmotionDetectionModel.h5')
+face_classifier=cv2.CascadeClassifier('/home/raspberry/R3LAX-M4X/Emotion-Detection/haarcascade_frontalface_default.xml')
+classifier = load_model('/home/raspberry/R3LAX-M4X/Emotion-Detection/EmotionDetectionModel.h5')
 
 class_labels=['Angry','Happy','Neutral','Sad','Surprise']
 
@@ -31,11 +31,12 @@ while True:
             preds=classifier.predict(roi)[0]
             label=class_labels[preds.argmax()]
             label_position=(x,y)
-            cv2.putText(frame,label,label_position,cv2.FONT_HERSHEY_SIMPLEX,2,(0,255,0),3)
-        else:
-            cv2.putText(frame,'No Face Found',(20,20),cv2.FONT_HERSHEY_SIMPLEX,2,(0,255,0),3)
-    
-    cv2.imshow('Emotion Detector',frame)
+
+            # cv2.putText(frame,label,label_position,cv2.FONT_HERSHEY_SIMPLEX,2,(0,255,0),3)
+        # else:
+            # cv2.putText(frame,'No Face Found',(20,20),cv2.FONT_HERSHEY_SIMPLEX,2,(0,255,0),3)
+            print('label: '+label)
+    # cv2.imshow('Emotion Detector',frame)
     if cv2.waitKey(1) & 0xFF == ord('q'):
         break
 cap.release()

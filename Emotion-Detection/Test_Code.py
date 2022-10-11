@@ -1,12 +1,13 @@
 from keras.models import load_model
 from time import sleep
-from keras.preprocessing.image import img_to_array
-from keras.preprocessing import image
+from keras_preprocessing.image import img_to_array
+from keras_preprocessing import image
 import cv2
 import numpy as np
 
-face_classifier=cv2.CascadeClassifier('haarcascade_frontalface_default.xml')
-classifier = load_model('EmotionDetectionModel.h5')
+face_classifier=cv2.CascadeClassifier('/home/raspberry/R3LAX-M4X/Emotion-Detection/haarcascade_frontalface_default.xml')
+classifier = load_model('/home/raspberry/R3LAX-M4X/Emotion-Detection/EmotionDetectionModel.h5')
+
 
 class_labels=['Angry','Happy','Neutral','Sad','Surprise']
 
