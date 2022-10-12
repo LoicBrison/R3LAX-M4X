@@ -1,23 +1,38 @@
+from pickle import NEXT_BUFFER
 from keras.models import load_model
+from enum import Enum
 from time import sleep
 from keras_preprocessing.image import img_to_array
 from keras_preprocessing import image
 import cv2
 import numpy as np
+import math
 
 face_classifier=cv2.CascadeClassifier('/home/raspberry/R3LAX-M4X/Emotion-Detection/haarcascade_frontalface_default.xml')
 classifier = load_model('/home/raspberry/R3LAX-M4X/Emotion-Detection/EmotionDetectionModel.h5')
 
 class_labels=['Angry','Happy','Neutral','Sad','Surprise']
 
+class Labels(Enum):
+    Angry = 0
+    Sad = 1
+    Neutral = 2
+    Surprise = 3
+    Happy = 4
+
+
 cap=cv2.VideoCapture(0)
 
-while True:
+nbFrames=60
+tabLabel = []
+
+for i in range(nbFrames):
     ret,frame=cap.read()
     labels=[]
     gray=cv2.cvtColor(frame,cv2.COLOR_BGR2GRAY)
     faces=face_classifier.detectMultiScale(gray,1.3,5)
-
+    label = 'Neutral'
+  
     for (x,y,w,h) in faces:
         cv2.rectangle(frame,(x,y),(x+w,y+h),(255,0,0),2)
         roi_gray=gray[y:y+h,x:x+w]
@@ -32,12 +47,13 @@ while True:
             label=class_labels[preds.argmax()]
             label_position=(x,y)
 
-            # cv2.putText(frame,label,label_position,cv2.FONT_HERSHEY_SIMPLEX,2,(0,255,0),3)
-        # else:
-            # cv2.putText(frame,'No Face Found',(20,20),cv2.FONT_HERSHEY_SIMPLEX,2,(0,255,0),3)
-            print('label: '+label)
-    # cv2.imshow('Emotion Detector',frame)
-    if cv2.waitKey(1) & 0xFF == ord('q'):
-        break
+    print(Labels[label].value)
+    tabLabel.append(Labels[label].value)
+
+
+LabelSum = np.mean(tabLabel)
+print(LabelSum)
+
+
 cap.release()
 cv2.destroyAllWindows()
